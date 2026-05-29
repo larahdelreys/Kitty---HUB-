@@ -1,9 +1,7 @@
-# Kitty---HUB-
-```lua
 local player = game.Players.LocalPlayer
 local RunService = game:GetService("RunService")
 
-local tp = false
+local ativoTP = false
 local fly = false
 local noclip = false
 
@@ -19,12 +17,12 @@ gui.ResetOnSpawn = false
 local main = Instance.new("Frame")
 main.Parent = gui
 main.Size = UDim2.new(0,340,0,500)
-main.Position = UDim2.new(0.5,-170,0.5,-250)
-main.BackgroundColor3 = Color3.fromRGB(15,15,15)
+main.Position = UDim2.new(0,20,0.5,-250)
+main.BackgroundColor3 = Color3.fromRGB(20,20,20)
 main.BorderSizePixel = 0
 main.ClipsDescendants = true
 
-Instance.new("UICorner",main).CornerRadius = UDim.new(0,28)
+Instance.new("UICorner", main).CornerRadius = UDim.new(0,28)
 
 -- RGB
 local stroke = Instance.new("UIStroke")
@@ -32,19 +30,18 @@ stroke.Parent = main
 stroke.Thickness = 3
 
 task.spawn(function()
-
 	local hue = 0
-
+	
 	while true do
-
+		
 		stroke.Color = Color3.fromHSV(hue,1,1)
-
+		
 		hue += 0.002
-
+		
 		if hue >= 1 then
 			hue = 0
 		end
-
+		
 		task.wait()
 	end
 end)
@@ -58,6 +55,14 @@ fundo.Image = "rbxassetid://11351620343"
 fundo.ImageTransparency = 0.35
 fundo.ScaleType = Enum.ScaleType.Crop
 
+-- ESCURECER
+local blur = Instance.new("Frame")
+blur.Parent = main
+blur.Size = UDim2.new(1,0,1,0)
+blur.BackgroundColor3 = Color3.new(0,0,0)
+blur.BackgroundTransparency = 0.35
+blur.BorderSizePixel = 0
+
 -- TOPO
 local top = Instance.new("Frame")
 top.Parent = main
@@ -65,8 +70,7 @@ top.Size = UDim2.new(1,0,0,60)
 top.BackgroundColor3 = Color3.fromRGB(0,0,0)
 top.BorderSizePixel = 0
 
-local topcorner = Instance.new("UICorner",top)
-topcorner.CornerRadius = UDim.new(0,28)
+Instance.new("UICorner", top).CornerRadius = UDim.new(0,28)
 
 -- TITULO
 local title = Instance.new("TextLabel")
@@ -78,46 +82,21 @@ title.TextColor3 = Color3.new(1,1,1)
 title.TextScaled = true
 title.Font = Enum.Font.GothamBold
 
--- FECHAR
-local fechar = Instance.new("TextButton")
-fechar.Parent = main
-fechar.Size = UDim2.new(0,35,0,35)
-fechar.Position = UDim2.new(1,-45,0,12)
-fechar.BackgroundColor3 = Color3.fromRGB(255,20,147)
-fechar.Text = "X"
-fechar.TextScaled = true
-fechar.TextColor3 = Color3.new(1,1,1)
-fechar.Font = Enum.Font.GothamBold
-fechar.BorderSizePixel = 0
-
-Instance.new("UICorner",fechar).CornerRadius = UDim.new(1,0)
-
--- ABRIR
-local abrir = Instance.new("ImageButton")
-abrir.Parent = gui
-abrir.Visible = false
-abrir.Size = UDim2.new(0,70,0,70)
-abrir.Position = UDim2.new(0,15,0.5,-35)
-abrir.BackgroundTransparency = 1
-abrir.Image = "rbxassetid://11735687651"
-
--- KITTY
+-- HELLO KITTY
 local kitty = Instance.new("ImageLabel")
 kitty.Parent = main
 kitty.Size = UDim2.new(0,110,0,110)
-kitty.Position = UDim2.new(0.5,-55,0,75)
+kitty.Position = UDim2.new(0.5,-55,0,70)
 kitty.BackgroundTransparency = 1
 kitty.Image = "rbxassetid://11735687651"
 
 task.spawn(function()
-
 	while true do
-
+		
 		kitty.Position = kitty.Position + UDim2.new(0,0,0,-0.01)
 		task.wait(0.5)
 		kitty.Position = kitty.Position + UDim2.new(0,0,0,0.01)
 		task.wait(0.5)
-
 	end
 end)
 
@@ -131,8 +110,8 @@ scroll.BorderSizePixel = 0
 scroll.CanvasSize = UDim2.new(0,0,0,600)
 scroll.ScrollBarThickness = 4
 
--- BOTÃO
-local function criarBotao(texto,y)
+-- botão
+local function createButton(text,y)
 
 	local b = Instance.new("TextButton")
 	b.Parent = scroll
@@ -142,25 +121,25 @@ local function criarBotao(texto,y)
 	b.TextColor3 = Color3.new(1,1,1)
 	b.TextScaled = true
 	b.Font = Enum.Font.GothamBold
-	b.Text = texto
+	b.Text = text
 	b.BorderSizePixel = 0
-
-	Instance.new("UICorner",b).CornerRadius = UDim.new(0,14)
-
+	
+	Instance.new("UICorner", b).CornerRadius = UDim.new(0,14)
+	
 	local s = Instance.new("UIStroke")
 	s.Parent = b
 	s.Color = Color3.fromRGB(255,105,180)
 	s.Thickness = 2
-
+	
 	return b
 end
 
-local tpBtn = criarBotao("TP OFF",0)
-local flyBtn = criarBotao("FLY OFF",60)
-local noclipBtn = criarBotao("NOCLIP OFF",120)
+local tpBtn = createButton("TP OFF",0)
+local flyBtn = createButton("FLY OFF",60)
+local noclipBtn = createButton("NOCLIP OFF",120)
 
--- INPUTS
-local function criarInput(txt,pos)
+-- COORDENADAS
+local function createBox(txt,pos)
 
 	local box = Instance.new("TextBox")
 	box.Parent = scroll
@@ -172,27 +151,60 @@ local function criarInput(txt,pos)
 	box.Font = Enum.Font.GothamBold
 	box.PlaceholderText = txt
 	box.BorderSizePixel = 0
-
-	Instance.new("UICorner",box).CornerRadius = UDim.new(0,10)
-
+	
+	Instance.new("UICorner", box).CornerRadius = UDim.new(0,10)
+	
 	local s = Instance.new("UIStroke")
 	s.Parent = box
 	s.Color = Color3.fromRGB(255,105,180)
-
+	
 	return box
 end
 
-local boxX = criarInput("X",-120)
-local boxY = criarInput("Y",-35)
-local boxZ = criarInput("Z",50)
+local boxX = createBox("X",-120)
+local boxY = createBox("Y",-35)
+local boxZ = createBox("Z",50)
 
 boxX.Text = tostring(pos2.X)
 boxY.Text = tostring(pos2.Y)
 boxZ.Text = tostring(pos2.Z)
 
-local apply = criarBotao("APLICAR",260)
+local apply = createButton("APLICAR",260)
 
--- INSTA
+-- FECHAR
+local close = Instance.new("TextButton")
+close.Parent = main
+close.Size = UDim2.new(0,35,0,35)
+close.Position = UDim2.new(1,-45,0,10)
+close.BackgroundColor3 = Color3.fromRGB(255,20,147)
+close.Text = "X"
+close.TextColor3 = Color3.new(1,1,1)
+close.TextScaled = true
+close.Font = Enum.Font.GothamBold
+close.BorderSizePixel = 0
+
+Instance.new("UICorner", close).CornerRadius = UDim.new(1,0)
+
+-- ABRIR
+local open = Instance.new("ImageButton")
+open.Parent = gui
+open.Visible = false
+open.Size = UDim2.new(0,70,0,70)
+open.Position = UDim2.new(0,10,0.5,-35)
+open.BackgroundTransparency = 1
+open.Image = "rbxassetid://11735687651"
+
+close.MouseButton1Click:Connect(function()
+	main.Visible = false
+	open.Visible = true
+end)
+
+open.MouseButton1Click:Connect(function()
+	main.Visible = true
+	open.Visible = false
+end)
+
+-- insta
 local insta = Instance.new("TextLabel")
 insta.Parent = gui
 insta.Size = UDim2.new(0,220,0,30)
@@ -204,34 +216,20 @@ insta.TextScaled = true
 insta.Font = Enum.Font.GothamBold
 
 task.spawn(function()
-
 	for i = 40,-10,-1 do
-
+		
 		insta.Position = UDim2.new(1,-230,1,i)
-
+		
 		task.wait(0.01)
 	end
-end)
-
--- FECHAR / ABRIR
-fechar.MouseButton1Click:Connect(function()
-
-	main.Visible = false
-	abrir.Visible = true
-end)
-
-abrir.MouseButton1Click:Connect(function()
-
-	main.Visible = true
-	abrir.Visible = false
 end)
 
 -- TP
 tpBtn.MouseButton1Click:Connect(function()
 
-	tp = not tp
-
-	if tp then
+	ativoTP = not ativoTP
+	
+	if ativoTP then
 		tpBtn.Text = "TP ON"
 		tpBtn.BackgroundColor3 = Color3.fromRGB(255,20,147)
 	else
@@ -252,23 +250,23 @@ end)
 task.spawn(function()
 
 	while true do
-
-		if tp then
-
+		
+		if ativoTP then
+			
 			local char = player.Character
-
+			
 			if char and char:FindFirstChild("HumanoidRootPart") then
-
+				
 				local hrp = char.HumanoidRootPart
-
+				
 				hrp.CFrame = CFrame.new(pos1)
 				task.wait(1)
-
+				
 				hrp.CFrame = CFrame.new(pos2)
 				task.wait(1)
 			end
 		end
-
+		
 		task.wait()
 	end
 end)
@@ -277,7 +275,7 @@ end)
 flyBtn.MouseButton1Click:Connect(function()
 
 	fly = not fly
-
+	
 	if fly then
 		flyBtn.Text = "FLY ON"
 		flyBtn.BackgroundColor3 = Color3.fromRGB(255,20,147)
@@ -290,11 +288,11 @@ end)
 RunService.RenderStepped:Connect(function()
 
 	if fly then
-
+		
 		local char = player.Character
-
+		
 		if char and char:FindFirstChild("HumanoidRootPart") then
-
+			
 			char.HumanoidRootPart.Velocity = Vector3.new(0,50,0)
 		end
 	end
@@ -304,7 +302,7 @@ end)
 noclipBtn.MouseButton1Click:Connect(function()
 
 	noclip = not noclip
-
+	
 	if noclip then
 		noclipBtn.Text = "NOCLIP ON"
 		noclipBtn.BackgroundColor3 = Color3.fromRGB(255,20,147)
@@ -317,13 +315,13 @@ end)
 RunService.Stepped:Connect(function()
 
 	if noclip then
-
+		
 		local char = player.Character
-
+		
 		if char then
-
+			
 			for _,v in pairs(char:GetDescendants()) do
-
+				
 				if v:IsA("BasePart") then
 					v.CanCollide = false
 				end
@@ -331,4 +329,3 @@ RunService.Stepped:Connect(function()
 		end
 	end
 end)
-```
